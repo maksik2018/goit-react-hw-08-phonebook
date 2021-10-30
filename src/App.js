@@ -14,16 +14,16 @@ import PublicRoute from "./components/PublicRoute";
 export default function App() {
   const dispatch = useDispatch();
   const isFetchingCurrentUser = useSelector(authSelectors.getIsFetchingCurrent);
-
+  // console.log("isFetchingCurrentUser:", isFetchingCurrentUser);
   useEffect(() => {
     dispatch(authOperations.fetchCurrentUser());
   }, [dispatch]);
 
   return (
     !isFetchingCurrentUser && (
-      <>
-        <AppBar />
-        <Container>
+      <Container>
+        <>
+          <AppBar />
           <Switch>
             <PublicRoute exact path="/">
               <HomeView />
@@ -37,12 +37,12 @@ export default function App() {
               <LoginView />
             </PublicRoute>
 
-            <PrivateRoute>
-              <ContactsView path="/contacts" />
+            <PrivateRoute path="/contacts">
+              <ContactsView />
             </PrivateRoute>
           </Switch>
-        </Container>
-      </>
+        </>
+      </Container>
     )
   );
 }

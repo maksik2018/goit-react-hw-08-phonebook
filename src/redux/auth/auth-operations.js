@@ -12,6 +12,12 @@ const token = {
   },
 };
 
+/*
+ * POST @ /users/signup
+ * body: { name, email, password }
+ * После успешной регистрации добавляем токен в HTTP-заголовок
+ */
+
 const register = createAsyncThunk("auth/register", async (credentials) => {
   console.log(`credentials ${credentials}`);
   try {
@@ -22,7 +28,11 @@ const register = createAsyncThunk("auth/register", async (credentials) => {
     console.log(error);
   }
 });
-
+/*
+ * POST @ /users/signup
+ * body: { name, email, password }
+ * После успешной регистрации добавляем токен в HTTP-заголовок
+ */
 const logIn = createAsyncThunk("auth/login", async (credentials) => {
   try {
     const { data } = await axios.post("/users/login", credentials);
@@ -32,6 +42,11 @@ const logIn = createAsyncThunk("auth/login", async (credentials) => {
     console.log(error);
   }
 });
+/*
+ * POST @ /users/logout
+ * headers: Authorization: Bearer token
+ * После успешного логаута, удаляем токен из HTTP-заголовка
+ */
 
 const logOut = createAsyncThunk("auth/logout", async () => {
   try {
@@ -41,7 +56,15 @@ const logOut = createAsyncThunk("auth/logout", async () => {
     console.log(error);
   }
 });
-
+/*
+ * GET @ /users/current
+ * headers:
+ *    Authorization: Bearer token
+ *
+ * 1. Забираем токен из стейта через getState()
+ * 2. Если токена нет, выходим не выполняя никаких операций
+ * 3. Если токен есть, добавляет его в HTTP-заголовок и выполянем операцию
+ */
 const fetchCurrentUser = createAsyncThunk(
   "auth/refresh",
   async (_, thunkAPI) => {
@@ -49,7 +72,7 @@ const fetchCurrentUser = createAsyncThunk(
     const persistedToken = state.auth.token;
     if (persistedToken === null) {
       return thunkAPI.rejectWithValue();
-      // return state;
+      // return state; так тоже можно вернуть, но лучше как выше
     }
     token.set(persistedToken);
     try {
